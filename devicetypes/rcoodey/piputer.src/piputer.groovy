@@ -14,49 +14,34 @@
  *
  */
 metadata {
-	definition (name: "Piputer", namespace: "rcoodey", author: "Ryan Coodey") {
-		capability "Switch"
-        
+    definition (name: "Piputer", namespace: "rcoodey", author: "Ryan Coodey") {
+        capability "Switch"
         command "statusEvent"
-	}
+    }
 
-	tiles {
-		// Main Row 
-        //multiAttributeTile(name:"switch", type: "generic", width: 6, height: 4, canChangeIcon: true){
-		//	tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-		//		attributeState "on", label: '${name}', action: "switch.on", icon: "st.Electronics.electronics18", backgroundColor: "#79b821"
-		//		attributeState "turningOn", label: '${name}', action: "switch.on", icon: "st.Electronics.electronics18", backgroundColor: "#79b821"
-		//		attributeState "off", label: '${name}', action: "switch.off", icon: "st.Electronics.electronics18", backgroundColor: "#ffffff"
-		//		attributeState "turningOff", label: '${name}', action: "switch.off", icon: "st.Electronics.electronics18", backgroundColor: "#ffffff"
-		//	}
-		//}
+    tiles {
         standardTile("switch", "device.switch", width: 3, height: 2) {
-			state "on", label: 'On', action: "switch.on", icon: "st.Electronics.electronics18", backgroundColor: "#79b821", nextState:"turningOff"
-			state "turningOn", label: 'Turning On', action: "switch.on", icon: "st.Electronics.electronics18", backgroundColor: "#79b821", nextState:"turningOff"
-			state "off", label: 'Off', action: "switch.off", icon: "st.Electronics.electronics18", backgroundColor: "#ffffff", nextState:"turningOn"
-			state "turningOff", label: 'Turning Off', action: "switch.off", icon: "st.Electronics.electronics18", backgroundColor: "#ffffff", nextState:"turningOn"
+            state "on", label: 'On', action: "switch.off", icon: "st.Electronics.electronics18", backgroundColor: "#79b821", nextState:"turningOff"
+            state "turningOn", label: 'Turning On', icon: "st.Electronics.electronics18", backgroundColor: "#79b821", nextState:"turningOff"
+            state "off", label: 'Off', action: "switch.on", icon: "st.Electronics.electronics18", backgroundColor: "#ffffff", nextState:"turningOn"
+            state "turningOff", label: 'Turning Off', icon: "st.Electronics.electronics18", backgroundColor: "#ffffff", nextState:"turningOn"
         }
- 
-	    main(["switch"])
-	    details(["switch"]) 
-	}
+        main(["switch"])
+        details(["switch"]) 
+    }
 }
 
 // handle commands
 def statusEvent(state) {
-	sendEvent(name: "switch", value: state)
+    sendEvent(name: "switch", value: state)
 }
 
 def on() {
-    //Called when device is on, so turn it off
     changePCPowerState("on")
-    log.debug "changePCPowerState: on"
 }
 
 def off() {
-    //Called when device is off, so turn it on
     changePCPowerState("off")
-    log.debug "changePCPowerState: off"
 }
 
 def changePCPowerState(requestedState)
@@ -76,7 +61,7 @@ def changePCPowerState(requestedState)
         }
         else
             return
-            
+ 
         //Setup a hub action to make http request
         def getAction = new physicalgraph.device.HubAction(
             method: "GET",
